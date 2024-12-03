@@ -90,13 +90,12 @@ class ImportGcode(bpy.types.Operator, ImportHelper):
         count = 1
         for _batch in self.batches(vertices, batch_size):
             for _layer in _batch:
-
-                if len(_layer)>0:
+                if len(_layer) > 0:
                     index = 0
-                    ops.curve.primitive_bezier_curve_add(location=_layer[0][1:],radius=0, enter_editmode=True)
+                    ops.curve.primitive_bezier_curve_add(location=_layer[0][1:], radius=0, enter_editmode=True)
 
                     layer = context.active_object
-                    layer.name = 'Layer: '+ str(count)
+                    layer.name = 'Layer: ' + str(count)
 
                     ops.curve.select_all(action='DESELECT')
                     ops.curve.select_random()
@@ -109,22 +108,24 @@ class ImportGcode(bpy.types.Operator, ImportHelper):
                         ops.curve.vertex_add(location=v[1:])
                         if v[0] == 0:
                             ops.curve.select_all(action='DESELECT')
-                            layer.data.splines[index].bezier_points[-1].select_control_point = True
-                            layer.data.splines[index].bezier_points[-2].select_control_point = True
-                            ops.curve.delete(type='SEGMENT')
+                            if len(layer.data.splines[index].bezier_points) > 1:
+                                layer.data.splines[index].bezier_points[-1].select_control_point = True
+                                layer.data.splines[index].bezier_points[-2].select_control_point = True
+                                ops.curve.delete(type='SEGMENT')
                             ops.curve.select_all(action='DESELECT')
-                            layer.data.splines[-1].bezier_points[-1].select_control_point = True
+                            if len(layer.data.splines) > 0:
+                                layer.data.splines[-1].bezier_points[-1].select_control_point = True
                             index += 1
 
                     ops.object.editmode_toggle()
                     context.object.data.twist_mode = 'Z_UP'
-                    context.object.data.bevel_depth = self.nozzle_dia/2
+                    context.object.data.bevel_depth = self.nozzle_dia / 2
 
                     obj_collection.objects.link(layer)
                     bpy.data.collections['Collection'].objects.unlink(layer)
                     ops.object.select_all(action='DESELECT')
                     count += 1
 
-        print("\nEXPORTED "+ str(i) +" LAYERS TO 3D-VIEWPORT :)\n")
+        print("\nEXPORTED " + str(i) + " LAYERS TO 3D-VIEWPORT :)\n")
         self.report({'INFO'}, 'Successfully imported {}'.format(filename))
         return {'FINISHED'}

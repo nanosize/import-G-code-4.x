@@ -1,0 +1,14 @@
+schema_version = "1.0.0"
+
+id = "Import_G_code_4_x"
+version = "2.1.0"
+name = "import G code 4.x"
+tagline = "Imports G-code files into Blender 4.2+ as layers"
+maintainer = "Senthur Raj Nanosize <nao@nanosize.net>"
+type = "add-on"
+
+blender_version_min = "4.2.0"
+
+license = [
+  "SPDX:GPL-3.0-or-later",
+]

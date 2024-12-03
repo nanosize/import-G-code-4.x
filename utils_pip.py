@@ -133,7 +133,6 @@ class Pip:
         [2] https://pip.pypa.io/en/stable/reference/pip_install/#id47
         """
         if options is None or options.strip() == "":
-            # store in user writable directory, use wheel, without deps
             options = "--user --only-binary all --no-deps"
         return Pip()._cmd("install", options, module)
 
